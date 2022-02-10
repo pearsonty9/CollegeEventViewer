@@ -9,7 +9,9 @@ import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Typography, Button, setRef } from '@mui/material';
+import { Typography, Button } from '@mui/material';
+
+import axios from 'axios';
 
 function Login(props) {
     const [values, setValues] = useState({
@@ -38,16 +40,27 @@ function Login(props) {
 
     const handelSignIn = (event) => {
         event.preventDefault();
-        // call api
-        // handle errors
-        if (values.email != 'email' || values.password != 'password') {
+        
+        if (values.email === '' || values.password === '') {
             setError(true);
             setErrorMessage("incorrect username or password");
         }
+
         else {
-            // login in user
-            setError(false);
-            setErrorMessage("logged in user");
+            axios.post('http://localhost:3000/user/login', { username: values.email, password: values.password })
+            .then(response => response.data)
+            .then(data => {
+                const users = data.users;
+                if (users.length !== 0) {
+                    setError(false);
+                    setErrorMessage("logged in user");
+                }
+                else {
+                    setError(true);
+                    setErrorMessage("incorrect username or password");
+                }
+            })
+            .catch(error => console.log(error));
         }
     }
     
