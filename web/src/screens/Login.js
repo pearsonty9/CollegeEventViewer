@@ -93,7 +93,14 @@ function Login(props) {
                 />
                 <FormHelperText id="login-helper-text" error={error}>{errorMessage}</FormHelperText>
                 </FormControl>
-                <Button variant="contained" type="submit" size="medium" onClick={handelSignIn} sx={{ width: '30%', alignSelf: "flex-end" }}>Sign in</Button>
+                <Button 
+                    variant="contained" 
+                    type="submit" 
+                    size="medium" 
+                    onClick={handelSignIn} 
+                    sx={{ width: '30%', alignSelf: "flex-end" }}>
+                    Sign in
+                </Button>
             </Box>
         </form>
       );

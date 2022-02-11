@@ -8,7 +8,7 @@ router.post('/login', async (req, res) => {
     const password = req.body.password;
     try {
         const rows = await db.query(
-            `SELECT * FROM users WHERE username='${username}' AND password='${password}'`,
+            `SELECT * FROM users WHERE Username='${username}' AND Password='${password}'`,
         );
         res.json({ users: rows });
     }

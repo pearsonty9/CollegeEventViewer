@@ -2,15 +2,11 @@ let mysql = require('mysql2');
 
 const express = require("express");
 const cors = require('cors')
+const config = require('./config');
 const app = express();
 const port = 3000;
 
-let connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'password',
-    database: 'eventmanager'
-});
+let connection = mysql.createConnection(config.db);
 
 connection.connect(function(err) {
     if (err) {
