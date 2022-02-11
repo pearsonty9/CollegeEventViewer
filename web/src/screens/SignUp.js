@@ -10,12 +10,15 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Typography, Button } from '@mui/material';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useNavigate } from "react-router-dom";
 
 import axios from 'axios';
 
-function Login(props) {
+function SignUp(props) {
     const [values, setValues] = useState({
+        type: 'student',
         email: '',
         password: '',
         showPassword: false,
@@ -41,7 +44,7 @@ function Login(props) {
         event.preventDefault();
     };
 
-    const handelLogin = (event) => {
+    const handelSignUp = (event) => {
         event.preventDefault();
         
         if (values.email === '' || values.password === '') {
@@ -50,31 +53,43 @@ function Login(props) {
         }
 
         else {
-            axios.post('http://localhost:3000/user/login', { username: values.email, password: values.password })
+            axios.post('http://localhost:3000/user/signup', { type: values.type, username: values.email, password: values.password })
             .then(response => response.data)
             .then(data => {
-                const users = data.users;
-                if (users.length !== 0) {
+                const userId = data.userId;
+                if (userId !== null) {
                     setError(false);
-                    setErrorMessage("logged in user");
+                    setErrorMessage("new account created");
+                    console.log("created user with id " + userId);
                 }
                 else {
                     setError(true);
-                    setErrorMessage("incorrect username or password");
+                    setErrorMessage("could not create account");
                 }
             })
             .catch(error => console.log(error));
         }
     }
-
-    const signUp = () => {
-        navigate("/signup");
+    
+    const login = () => {
+        navigate("/");
     }
     
-      return (
+    return (
         <form>
             <Box sx={{ display: 'flex', flexDirection: 'column' , padding: 1, width: {xs: '35ch', sm: '50%', md: '50ch'}, my: 20, mx: 'auto' }}>
-                <Typography variant='h3' sx={{ my: 2 }}>Login</Typography>
+                <Typography variant='h3' sx={{ my: 1 }}>Create Account</Typography>
+                <ToggleButtonGroup
+                    color="primary"
+                    size="small"
+                    value={values.type}
+                    exclusive
+                    onChange={handleChange('type')}
+                    sx={{ my: 1 }}
+                >
+                        <ToggleButton value="Admin" sx={{ width: "50%" }}>Admin</ToggleButton>
+                        <ToggleButton value="student" sx={{ width: "50%" }}>Student</ToggleButton>
+                </ToggleButtonGroup>
                 <TextField id="email-field" error={error} label="Email" onChange={handleChange('email')} fullWidth sx={{ marginY: 1 }}/>
                 <FormControl sx={{ width: '100%', marginY: 1 }} variant="outlined">
                 <InputLabel htmlFor="password-field-label" error={error}>Password</InputLabel>
@@ -104,23 +119,23 @@ function Login(props) {
                     <Button 
                         variant="text" 
                         size="small" 
-                        onClick={signUp}
+                        onClick={login}
                     >
-                        No account? Create one
+                        Have account? Login
                     </Button>
                     <Button 
                         variant="contained" 
                         type="submit" 
                         size="medium" 
-                        onClick={handelLogin}
-                        sx={{ width: '25%'}}
+                        onClick={handelSignUp} 
+                        sx={{ width: '40%', alignSelf: "flex-end" }}
                     >
-                        Sign in
+                        Create Account
                     </Button>
                 </Box>
             </Box>
         </form>
-      );
+    );
 }
 
-export default Login;
+export default SignUp;
