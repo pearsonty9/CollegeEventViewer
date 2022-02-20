@@ -46,7 +46,7 @@ function Login(props) {
         
         if (values.email === '' || values.password === '') {
             setError(true);
-            setErrorMessage("incorrect username or password");
+            setErrorMessage("Incorrect username or password");
         }
 
         else {
@@ -56,11 +56,11 @@ function Login(props) {
                 const users = data.users;
                 if (users.length !== 0) {
                     setError(false);
-                    setErrorMessage("logged in user");
+                    setErrorMessage("Logged in user");
                 }
                 else {
                     setError(true);
-                    setErrorMessage("incorrect username or password");
+                    setErrorMessage("Incorrect username or password");
                 }
             })
             .catch(error => console.log(error));

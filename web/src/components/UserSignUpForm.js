@@ -49,7 +49,7 @@ function UserSignUpForm(props) {
         
         if (values.email === '' || values.password === '') {
             setError(true);
-            setErrorMessage("enter email and password");
+            setErrorMessage("Enter email and password");
         }
         else if (values.type == 'admin') {
             props.setUser({
@@ -65,12 +65,12 @@ function UserSignUpForm(props) {
                 const userId = data.userId;
                 if (userId !== null) {
                     setError(false);
-                    setErrorMessage("new account created");
+                    setErrorMessage("New account created");
                     console.log("created user with id " + userId);
                 }
                 else {
                     setError(true);
-                    setErrorMessage("could not create account");
+                    setErrorMessage("Could not create account");
                 }
             })
             .catch(error => console.log(error));

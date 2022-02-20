@@ -27,26 +27,28 @@ function UniversitySignUpForm(props) {
 
     const handelSignUp = (event) => {
         event.preventDefault();
-        console.log({ type: 'admin', ...props.user, ...values });
-        // Verify fields
 
-        // Make api call to create university
-        // have to get username and password state some how
-        axios.post('http://localhost:3000/user/signupUniversity', { type: 'admin', ...props.user, ...values })
-        .then(response => response.data)
-        .then(data => {
-            const userId = data.userId;
-            if (userId !== null) {
-                setError(false);
-                setErrorMessage("new account created");
-                console.log("created user with id " + userId);
-            }
-            else {
-                setError(true);
-                setErrorMessage("could not create account");
-            }
-        })
-        .catch(error => console.log(error));
+        if (values.name === '' || values.location === '' || values.description === '') {
+            setError(true);
+            setErrorMessage("All fields are required");
+        }
+        else {
+            axios.post('http://localhost:3000/user/signupUniversity', { type: 'admin', ...props.user, ...values })
+            .then(response => response.data)
+            .then(data => {
+                const userId = data.userId;
+                if (userId !== null) {
+                    setError(false);
+                    setErrorMessage("New account created");
+                    console.log("created user with id " + userId);
+                }
+                else {
+                    setError(true);
+                    setErrorMessage("Could not create account");
+                }
+            })
+            .catch(error => console.log(error));
+        }
     }
     
     const login = () => {
