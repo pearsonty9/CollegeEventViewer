@@ -25,7 +25,12 @@ app.use(
 );
 
 const userRoutes = require('./routes/users');
+const eventRoutes = require('./routes/events');
+const RSORoutes = require('./routes/rsos');
+
 app.use('/user', userRoutes);
+app.use('/event', eventRoutes);
+app.use('/rso', RSORoutes);
 
 
 app.listen(port, () => {

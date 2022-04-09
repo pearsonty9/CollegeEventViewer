@@ -32,6 +32,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -46,15 +47,18 @@
   transform: translateX(-40%);
   opacity: 0%;
 }
+
 .menu-primary-enter-active {
   transform: translateX(0%);
   opacity: 100%;
   transition: transform 500ms, opacity 500ms;
   transition-timing-function: ease;
 }
+
 .menu-primary-exit {
   position: absolute;
 }
+
 .menu-primary-exit-active {
   transform: translateX(-40%);
   opacity: 0%;
@@ -66,15 +70,18 @@
   position: absolute;
   transform: translateX(40%);
 }
+
 .menu-secondary-enter-active {
   transform: translateX(0%);
   opacity: 100%;
   transition: transform 500ms, opacity 500ms;
   transition-timing-function: ease;
 }
+
 .menu-secondary-exit {
   position: absolute;
 }
+
 .menu-secondary-exit-active {
   transform: translateX(40%);
   opacity: 0%;
