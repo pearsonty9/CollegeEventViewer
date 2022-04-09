@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
-import Card from "../components/EventCard";
+import EventCard from "../components/EventCard";
 import { Paper, Grid, Button, Typography } from '@mui/material';
 
 import testData from "../events";
 import Navbar from '../components/Navbar'; 
 
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Home(props) {
 
     const [events, setEvents] = useState([]);
     const [rsos, setRsos] = useState([]);
 
-    useEffect(() => {
-        const req = {
-            mesage: "Test"
-        };
+    const navigate = useNavigate();
 
-        axios.post('http://localhost:8080/rso', req)
+    useEffect(() => {
+        const userid = JSON.parse(localStorage.getItem("userid"));
+        const university = JSON.parse(localStorage.getItem("university"));
+
+        axios.post(`http://localhost:3000/rso/${university}/${userid}`)
         .then(res => res.data)
         .then(data => console.log(data))
         .catch(error => console.log(error));
 
-        axios.post('http://localhost:8080/event', req)
+        axios.get(`http://localhost:3000/event/${university}/${userid}`)
         .then(res => res.data)
         .then(data => console.log(data))
         .catch(error => console.log(error));
@@ -52,15 +54,15 @@ function Home(props) {
                 <Grid item xs={4}>
                     <Paper sx={sidebarStyle}>
                         <Typography sx={{fontSize: 20}}>Actions</Typography>
-                        <Button sx={{height: 40, backgroundColor: "#C4C4C4", color: "black"}}>Create Event</Button>
-                        <Button sx={{height: 40, backgroundColor: "#C4C4C4", color: "black"}}>Create RSO</Button>
-                        <Button sx={{height: 40, backgroundColor: "#C4C4C4", color: "black"}}>Find RSO</Button>
+                        <Button onClick={() => navigate("/createevent")} sx={{height: 40, backgroundColor: "#C4C4C4", color: "black"}}>Create Event</Button>
+                        <Button onClick={() => navigate("/createrso")} sx={{height: 40, backgroundColor: "#C4C4C4", color: "black"}}>Create RSO</Button>
+                        <Button onClick={() => navigate("/searchrso")} sx={{height: 40, backgroundColor: "#C4C4C4", color: "black"}}>Find RSO</Button>
                     </Paper>
                 </Grid >
                 <Grid item xs={8} sx={{display: "flex", flexDirection: "column", gap: 3, mt: 3}}>
                     <Typography sx={{textAlign: "left", fontSize: 24}}>Events</Typography>
                     {events.length > 0 ?events.map((event) => (
-                        <Card event={event} key={event.name}/>
+                        <EventCard event={event} key={event.name}/>
                     ))
                     :<Typography sx={{fontSize: 20}}>No events avilable</Typography>
                     }
@@ -73,7 +75,7 @@ function Home(props) {
                                     {item.name}
                                 </Button>
                         ))
-                        : <Button sx={{height: 40, backgroundColor: "#C4C4C4", color: "black"}}>Join an RSO</Button>
+                        : <Button onClick={() => navigate("/searchrso")} sx={{height: 40, backgroundColor: "#C4C4C4", color: "black"}}>Join an RSO</Button>
                         }
                     </Paper>
                 </Grid>

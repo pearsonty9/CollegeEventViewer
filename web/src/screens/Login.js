@@ -56,7 +56,10 @@ function Login(props) {
                 const users = data.users;
                 if (users.length !== 0) {
                     setError(false);
+                    localStorage.setItem("userid", JSON.stringify(data.users[0].UID));
+                    localStorage.setItem("university", JSON.stringify(data.users[0].uniName));
                     setErrorMessage("Logged in user");
+                    navigate("/home");
                 }
                 else {
                     setError(true);
