@@ -58,6 +58,8 @@ function Login(props) {
                     setError(false);
                     localStorage.setItem("userid", JSON.stringify(data.users[0].UID));
                     localStorage.setItem("university", JSON.stringify(data.users[0].uniName));
+                    localStorage.setItem("username", JSON.stringify(data.users[0].username));
+                    localStorage.setItem("userType", JSON.stringify(data.users[0].userType));
                     setErrorMessage("Logged in user");
                     navigate("/home");
                 }

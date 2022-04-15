@@ -19,6 +19,7 @@ import axios from 'axios';
 function UserSignUpForm(props) {
     const [values, setValues] = useState({
         type: 'student',
+        university: '',
         email: '',
         password: '',
         showPassword: false,
@@ -51,7 +52,7 @@ function UserSignUpForm(props) {
             setError(true);
             setErrorMessage("Enter email and password");
         }
-        else if (values.type == 'admin') {
+        else if (values.type === 'admin') {
             props.setUser({
                 email: values.email,
                 password: values.password,
@@ -59,7 +60,7 @@ function UserSignUpForm(props) {
             props.setActiveMenu('university');
         }
         else {
-            axios.post('http://localhost:3000/user/signup', { type: values.type, username: values.email, password: values.password })
+            axios.post('http://localhost:3000/user/signup', { username: values.email, password: values.password, university: values.university })
             .then(response => response.data)
             .then(data => {
                 const userId = data.userId;
@@ -67,6 +68,7 @@ function UserSignUpForm(props) {
                     setError(false);
                     setErrorMessage("New account created");
                     console.log("created user with id " + userId);
+                    navigate("/login");
                 }
                 else {
                     setError(true);
@@ -96,6 +98,7 @@ function UserSignUpForm(props) {
                         <ToggleButton value="student" sx={{ width: "50%" }}>Student</ToggleButton>
                         <ToggleButton value="admin" sx={{ width: "50%" }}>Admin</ToggleButton>
                 </ToggleButtonGroup>
+                {values.type === 'student' && <TextField id="university-field" error={error} label="University" onChange={handleChange('university')} fullWidth sx={{ marginY: 1 }}/>}
                 <TextField id="email-field" error={error} label="Email" onChange={handleChange('email')} fullWidth sx={{ marginY: 1 }}/>
                 <FormControl sx={{ width: '100%', marginY: 1 }} variant="outlined">
                 <InputLabel htmlFor="password-field-label" error={error}>Password</InputLabel>
