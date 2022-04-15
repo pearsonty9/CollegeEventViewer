@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-import { Box, Grid, TextField, Button, Typography } from '@mui/material';
+import { Box, Grid, Stack, TextField, Button, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 
 import Navbar from '../components/Navbar';
@@ -16,6 +16,7 @@ function CreateRSO(props) {
         description: "",
         membersList: ["", "", "", ""],
     });
+    const [errorMessage, setErrorMessage] = useState("");
 
     const navigate = useNavigate();
 
@@ -37,21 +38,29 @@ function CreateRSO(props) {
         event.preventDefault();
         const userid = JSON.parse(localStorage.getItem("userid"));
         const uniName = JSON.parse(localStorage.getItem("university"));
+        const username = JSON.parse(localStorage.getItem("username"));
 
         const req = {
             ...fields,
             userID: userid,
             uniName: uniName,
+            username: username,
         }
-        await axios.post('http://localhost:3000/rso', req)
+        axios.post('http://localhost:3000/rso', req)
         .then(res => res.data)
-        .then(data => console.log(data))
+        .then(data => {
+            if (data.message === undefined) {
+                clearFields();
+                const userType = JSON.parse(localStorage.getItem("userType"));
+                if (userType === "STU")
+                    localStorage.setItem("userType", JSON.stringify("ADM"));
+                navigate("/home");
+            }
+            else {
+                setErrorMessage(data.message);
+            }
+        })
         .catch(error => console.log(error));
-        clearFields();
-        const userType = JSON.parse(localStorage.getItem("userType"));
-        if (userType === "STU")
-            localStorage.setItem("userType", JSON.stringify("ADM"));
-        navigate("/home");
     };
 
     const clearFields = () => {
@@ -83,7 +92,7 @@ function CreateRSO(props) {
                 </Grid>
                 {fields.membersList.map((item, index) => (
                     <Grid item xs={4} key={index}>
-                        <TextField fullWidth variant="outlined" color="primary" id="member-email" label="Member" onChange={handleMembersList(index)}/>
+                        <TextField required fullWidth variant="outlined" color="primary" id="member-email" label="Member" onChange={handleMembersList(index)}/>
                     </Grid>
                 ))}
                 <Grid item xs={4}>
@@ -92,8 +101,11 @@ function CreateRSO(props) {
                 <Grid item xs={12}>
                     <TextField required fullWidth variant="outlined" multiline minRows={4} color="primary" id="description" label="Description" onChange={handleChange("description")}/>
                 </Grid>
-                <Grid item xs={12} sx={{display: "flex", justifyContent: "flex-end"}}>
-                    <Button variant="contained" type="submit" color="primary" style={{width: "10rem"}}>Create RSO</Button>
+                <Grid item xs={12}>
+                    <Stack spacing={1} sx={{mt: -2}} alignItems="flex-end">
+                        <Typography variant="body2" style={{color: "red", textAlign: "right"}}>{errorMessage}</Typography>
+                        <Button variant="contained" type="submit" color="primary" style={{width: "10rem"}}>Create RSO</Button>
+                    </Stack>
                 </Grid>
             </Grid>
         </Box>

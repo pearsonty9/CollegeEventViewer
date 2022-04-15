@@ -4,6 +4,7 @@ const db = require('../db.js');
 
 router.post('/', async (req, res) => {
     const userID = req.body.userID;
+    const username = req.body.username;
     const uniName = req.body.uniName;
     const rsoEmail = req.body.domainEmail;
     const rsoName = req.body.name;
@@ -14,7 +15,15 @@ router.post('/', async (req, res) => {
 
     try {
         if(memberList.length < 4)
-            return console.log("Member list must be at least 5");
+            return res.json({message: "less than required amount of members"});
+        
+        const domain = getDomain(username);
+        console.log(domain);
+        for (const i in memberList) {
+            if (getDomain(memberList[i]) !== domain)
+                return res.json({message: "all member email domains do not match"});
+        }
+
         const give = await db.query(
             `INSERT INTO rso (domainEmail, UID, uniName, rsoName, ContactNumber, ContactEmail, description) VALUES
             ('${rsoEmail}', '${userID}', '${uniName}', '${rsoName}', '${contactNumber}', '${contactEmail}', '${description}')`,
@@ -37,12 +46,16 @@ router.post('/', async (req, res) => {
         await db.query(
             `UPDATE users SET userType = 'ADM' WHERE UID = '${userID}' AND userType = 'STU'`
         );
-        res.json({rsoid: rsoID});
+        return res.json({rsoid: rsoID});
     }
     catch (error) {
         console.log(error);
     }
 });
+
+const getDomain = (email) => {
+    return email.split("@")[1];
+}
 
 router.get('/user/:userid', async (req, res) => {
     const userid = req.params.userid;
@@ -95,6 +108,12 @@ router.post('/join', async (req, res) => {
         const query = await db.query(
             `INSERT INTO joined (UID, RID) VALUES (${userid}, ${rsoid})`,
         );
+        const count = await db.query(`SELECT COUNT(UID) from joined where RID = ${rsoid}`);
+        if (count[0]['COUNT(UID)'] === 5) {
+            await db.query(
+                `UPDATE rso SET isActive = 1 WHERE RID = ${rsoid}`,
+            );
+        }
         res.json(query.insertId);
     }
     catch (error) {
@@ -110,6 +129,12 @@ router.post('/leave', async (req, res) => {
         const query = await db.query(
             `DELETE FROM joined WHERE UID = ${userid} && RID = ${rsoid}`,
         );
+        const count = await db.query(`SELECT COUNT(UID) from joined where RID = ${rsoid}`);
+        if (count[0]['COUNT(UID)'] === 4) {
+            await db.query(
+                `UPDATE rso SET isActive = 0 WHERE RID = ${rsoid}`,
+            );
+        }
         res.json(query.affectedRows);
     }
     catch (error) {

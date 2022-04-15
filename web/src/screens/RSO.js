@@ -79,8 +79,9 @@ function RSO(props) {
                     <Typography sx={{ml: 3}}>Email: {email}</Typography>
                     <Typography sx={{ml: 3}}>Phone#: {phone}</Typography>
                     <Stack direction="row" spacing={3} justifyContent="flex-end">
-                        {isAdmin ? <Button onClick={createEvent} variant="outlined">Create Event</Button> : !isActive ? <Button onClick={joinRSO} variant="outlined">Join</Button> : <Button onClick={leaveRSO} variant="outlined" sx={{alignSelf: "flex-end"}}>Leave</Button>}
+                        {isAdmin ? <Button onClick={createEvent} disabled={state.rso.isActive === 0} variant="outlined">Create Event</Button> : !isActive ? <Button onClick={joinRSO} variant="outlined">Join</Button> : <Button onClick={leaveRSO} variant="outlined" sx={{alignSelf: "flex-end"}}>Leave</Button>}
                     </Stack>
+                    {state.rso.isActive === 0 ? <Typography style={{textAlign: "right", marginTop: "10px"}}>RSO is inactive, gain more members to create events</Typography>: null}
                 </Stack>
             </Paper>
             <Box sx={{maxWidth: "800px", marginX: "auto", marginY: "20px", textAlign: "left"}}>
