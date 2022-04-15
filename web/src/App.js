@@ -13,6 +13,8 @@ import CreateEvent from './screens/CreateEvent';
 import RSO from './screens/RSO';
 import CreateRSO from './screens/CreateRSO';
 import SearchRSO from './screens/SearchRSO';
+import CreateRSOEvent from './screens/CreateRSOEvent';
+import UnapprovedEvents from './screens/UnapprovedEvents';
 
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
           <Route path="/rso" element={<RSO />} />
           <Route path="/createrso" element={<CreateRSO />} />
           <Route path="/searchrso" element={<SearchRSO />} />
+          <Route path="/creatersoevent" element={<CreateRSOEvent />} />
+          <Route path="/approve" element={<UnapprovedEvents/>} />
           <Route path="/" element={<Login />} />
         </Routes>
       </BrowserRouter>

@@ -28,12 +28,12 @@ function UniversitySignUpForm(props) {
     const handelSignUp = (event) => {
         event.preventDefault();
 
-        if (values.name === '' || values.location === '' || values.description === '') {
+        if (values.name === '' || values.description === '') {
             setError(true);
             setErrorMessage("All fields are required");
         }
         else {
-            axios.post('http://localhost:3000/user/signupUniversity', { type: 'admin', ...props.user, ...values })
+            axios.post('http://localhost:3000/user/adminSignup', { ...props.user, ...values })
             .then(response => response.data)
             .then(data => {
                 const userId = data.userId;
@@ -41,6 +41,7 @@ function UniversitySignUpForm(props) {
                     setError(false);
                     setErrorMessage("New account created");
                     console.log("created user with id " + userId);
+                    navigate("/login");
                 }
                 else {
                     setError(true);
@@ -60,7 +61,7 @@ function UniversitySignUpForm(props) {
             <Box sx={{ display: 'flex', flexDirection: 'column' , padding: 1, width: {xs: '35ch', sm: '50%', md: '50ch'}, my: 20, mx: 'auto' }}>
                 <Typography variant='h3' sx={{ my: 1 }}>Create University</Typography>
                 <TextField id="name-field" error={error} label="Name" onChange={handleChange('name')} fullWidth sx={{ marginY: 1 }}/>
-                <TextField id="location-field" error={error} label="Location" onChange={handleChange('location')} fullWidth sx={{ marginY: 1 }}/>
+                {/* <TextField id="location-field" error={error} label="Location" onChange={handleChange('location')} fullWidth sx={{ marginY: 1 }}/> */}
                 <TextField id="description-field" multiline rows={5} error={error} label="Description" onChange={handleChange('description')} fullWidth sx={{ marginY: 1 }}/>
                 <FormControl sx={{ width: '100%', marginY: 1 }} variant="outlined">
                 <FormHelperText id="login-helper-text" error={error}>{errorMessage}</FormHelperText>

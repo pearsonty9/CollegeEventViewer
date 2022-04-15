@@ -27,10 +27,12 @@ app.use(
 const userRoutes = require('./routes/users');
 const eventRoutes = require('./routes/events');
 const RSORoutes = require('./routes/rsos');
+const commentRoutes = require('./routes/comments');
 
 app.use('/user', userRoutes);
 app.use('/event', eventRoutes);
 app.use('/rso', RSORoutes);
+app.use('/comment', commentRoutes);
 
 
 app.listen(port, () => {
